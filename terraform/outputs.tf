@@ -34,3 +34,19 @@ output "acr_admin_password" {
   value       = azurerm_container_registry.acr.admin_password
   sensitive   = true
 }
+
+output "sql_server_fqdn" {
+  description = "FQDN do SQL Server"
+  value       = azurerm_mssql_server.sql.fully_qualified_domain_name
+}
+
+output "sql_database_name" {
+  description = "Nome do banco de dados SQL"
+  value       = azurerm_mssql_database.db.name
+}
+
+output "sql_connection_string" {
+  description = "Connection string do SQL Database"
+  value       = "Server=${azurerm_mssql_server.sql.fully_qualified_domain_name};Database=${azurerm_mssql_database.db.name};User Id=${var.sql_admin_login};Password=${var.sql_admin_password};TrustServerCertificate=True;"
+  sensitive   = true
+}

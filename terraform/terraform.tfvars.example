@@ -1,0 +1,13 @@
+# terraform.tfvars.example
+# 
+# Copie este arquivo para terraform.tfvars e preencha com seus valores
+# NUNCA commite terraform.tfvars no Git (já está no .gitignore)
+
+# resource_group_name = "fiap-fase-02"
+# location            = "eastus"
+# sql_location        = "brazilsouth"
+# acr_name            = "fiapcr"
+# sql_server_name     = "fcg-user-sqlserver"
+# sql_admin_login     = "sqladmin"
+# sql_admin_password  = "SUA_SENHA_SEGURA_AQUI"
+# sql_database_name   = "fcg_user"

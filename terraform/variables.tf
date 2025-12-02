@@ -41,3 +41,39 @@ variable "acr_admin_enabled" {
   type        = bool
   default     = true
 }
+
+variable "sql_server_name" {
+  description = "Nome do SQL Server (deve ser globalmente único)"
+  type        = string
+  default     = "fcg-user-sqlserver"
+}
+
+variable "sql_admin_login" {
+  description = "Login do administrador do SQL Server"
+  type        = string
+  default     = "sqladmin"
+}
+
+variable "sql_admin_password" {
+  description = "Senha do administrador do SQL Server (deve ser fornecida via variável de ambiente ou prompt)"
+  type        = string
+  sensitive   = true
+}
+
+variable "sql_database_name" {
+  description = "Nome do banco de dados SQL"
+  type        = string
+  default     = "fcg_user"
+}
+
+variable "sql_sku" {
+  description = "SKU do SQL Database"
+  type        = string
+  default     = "Basic"
+}
+
+variable "sql_location" {
+  description = "Localização do SQL Server na Azure"
+  type        = string
+  default     = "brazilsouth"
+}
