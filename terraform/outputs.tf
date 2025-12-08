@@ -50,3 +50,25 @@ output "sql_connection_string" {
   value       = "Server=${azurerm_mssql_server.sql.fully_qualified_domain_name};Database=${azurerm_mssql_database.db.name};User Id=${var.sql_admin_login};Password=${var.sql_admin_password};TrustServerCertificate=True;"
   sensitive   = true
 }
+
+output "appinsights_instrumentation_key" {
+  description = "Instrumentation Key do Application Insights"
+  value       = azurerm_application_insights.main.instrumentation_key
+  sensitive   = true
+}
+
+output "appinsights_connection_string" {
+  description = "Connection String do Application Insights"
+  value       = azurerm_application_insights.main.connection_string
+  sensitive   = true
+}
+
+output "appinsights_app_id" {
+  description = "Application ID do Application Insights"
+  value       = azurerm_application_insights.main.app_id
+}
+
+output "log_analytics_workspace_id" {
+  description = "ID do Log Analytics Workspace"
+  value       = azurerm_log_analytics_workspace.main.id
+}

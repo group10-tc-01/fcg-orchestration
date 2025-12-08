@@ -77,3 +77,35 @@ variable "sql_location" {
   type        = string
   default     = "brazilsouth"
 }
+
+variable "appinsights_name" {
+  description = "Nome do Application Insights"
+  type        = string
+  default     = "fcg-appinsights"
+}
+
+variable "log_analytics_workspace_name" {
+  description = "Nome do Log Analytics Workspace"
+  type        = string
+  default     = "fcg-logs-workspace"
+}
+
+variable "appinsights_application_type" {
+  description = "Tipo de aplicação para o Application Insights"
+  type        = string
+  default     = "web"
+  validation {
+    condition     = contains(["web", "other"], var.appinsights_application_type)
+    error_message = "Tipo de aplicação inválido. Valores aceitos: web, other."
+  }
+}
+
+variable "log_retention_in_days" {
+  description = "Período de retenção dos logs em dias"
+  type        = number
+  default     = 30
+  validation {
+    condition     = var.log_retention_in_days >= 30 && var.log_retention_in_days <= 730
+    error_message = "Retenção de logs deve estar entre 30 e 730 dias."
+  }
+}

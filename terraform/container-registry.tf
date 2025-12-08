@@ -5,4 +5,6 @@ resource "azurerm_container_registry" "acr" {
   sku                 = var.acr_sku
   admin_enabled       = var.acr_admin_enabled
   tags                = var.tags
+  public_network_access_enabled = true
+  anonymous_pull_enabled        = true
 }

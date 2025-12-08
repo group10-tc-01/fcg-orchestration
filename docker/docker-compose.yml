@@ -1,0 +1,168 @@
+services:
+    sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        container_name: sqlserver-fcg
+        environment:
+            - ACCEPT_EULA=Y
+            - SA_PASSWORD=YourPassword123**
+            - MSSQL_PID=Developer
+        ports:
+            - "1433:1433"
+        volumes:
+            - sqlserver_data:/var/opt/mssql
+            - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+        networks:
+            - network-fcg
+        healthcheck:
+            test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "YourPassword123**" -Q "SELECT 1" -C || exit 1
+            interval: 10s
+            timeout: 3s
+            retries: 10
+            start_period: 10s
+
+    seq:
+        image: datalust/seq:latest
+        container_name: seq-fcg
+        environment:
+            - ACCEPT_EULA=Y
+            - SEQ_FIRSTRUN_ADMINPASSWORD=YourPassword123**
+        ports:
+            - "5341:5341"
+            - "5342:80"
+        networks:
+            - network-fcg
+
+    zookeeper:
+        image: confluentinc/cp-zookeeper:7.5.0
+        container_name: zookeeper-fcg
+        ports:
+            - "2181:2181"
+        environment:
+            ZOOKEEPER_CLIENT_PORT: 2181
+            ZOOKEEPER_TICK_TIME: 2000
+        volumes:
+            - zookeeper_data:/var/lib/zookeeper/data
+            - zookeeper_logs:/var/lib/zookeeper/log
+        networks:
+            - network-fcg
+
+    kafka:
+        image: confluentinc/cp-kafka:7.5.0
+        container_name: kafka-fcg
+        depends_on:
+            - zookeeper
+        ports:
+            - "9092:9092"
+            - "29092:29092"
+        environment:
+            KAFKA_BROKER_ID: 1
+            KAFKA_ZOOKEEPER_CONNECT: zookeeper-fcg:2181
+            KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-fcg:29092,EXTERNAL://localhost:9092
+            KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+            KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092
+            KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+            KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+            KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+        volumes:
+            - kafka_data:/var/lib/kafka/data
+        networks:
+            - network-fcg
+        restart: always
+        healthcheck:
+            test: kafka-broker-api-versions --bootstrap-server kafka-fcg:9092 || exit 1
+            interval: 10s
+            timeout: 5s
+            retries: 5
+            start_period: 30s
+
+    kafka-init:
+        image: confluentinc/cp-kafka:7.5.0
+        container_name: kafka-init-fcg
+        depends_on:
+            kafka:
+                condition: service_healthy
+        entrypoint: ["/bin/bash", "/scripts/init-kafka-topics.sh"]
+        volumes:
+            - ./init-kafka-topics.sh:/scripts/init-kafka-topics.sh
+        networks:
+            - network-fcg
+        restart: "no"
+
+    kafka-ui:
+        image: provectuslabs/kafka-ui:latest
+        container_name: kafka-ui-fcg
+        ports:
+            - "8081:8080"
+        environment:
+            KAFKA_CLUSTERS_0_NAME: local
+            KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-fcg:29092
+            KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper-fcg:2181
+            KAFKA_CLUSTERS_0_READONLY: "false"
+            DYNAMIC_CONFIG_ENABLED: "true"
+        depends_on:
+            - kafka
+            - kafka-init
+        networks:
+            - network-fcg
+
+    fcg-users:
+        image: fiapcr.azurecr.io/fcg-users:latest
+        container_name: fcg-users
+        depends_on:
+            sqlserver:
+                condition: service_healthy
+            seq:
+                condition: service_started
+            kafka:
+                condition: service_healthy
+        ports:
+            - "5050:8080"
+            - "5052:8081"
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Docker
+            - ASPNETCORE_URLS=http://+:8080;http://+:8081
+            - ConnectionStrings__DefaultConnection=Server=sqlserver-fcg,1433;Initial Catalog=fcg_user;Persist Security Info=False;User ID=sa;Password=YourPassword123**;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;
+        networks:
+            - network-fcg
+        restart: unless-stopped
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "10m"
+                max-file: "3"
+
+    fcg-payments:
+        image: fiapcr.azurecr.io/fcg-payments:latest
+        container_name: fcg-payments
+        depends_on:
+            sqlserver:
+                condition: service_healthy
+            seq:
+                condition: service_started
+            kafka:
+                condition: service_healthy
+        ports:
+            - "5060:8080"
+            - "5062:8081"
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Docker
+            - ASPNETCORE_URLS=http://+:8080;http://+:8081
+            - ConnectionStrings__DefaultConnection=Server=sqlserver-fcg,1433;Initial Catalog=fcg_payment;Persist Security Info=False;User ID=sa;Password=YourPassword123**;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;
+        networks:
+            - network-fcg
+        restart: unless-stopped
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "10m"
+                max-file: "3"
+
+volumes:
+    sqlserver_data:
+    zookeeper_data:
+    zookeeper_logs:
+    kafka_data:
+
+networks:
+    network-fcg:
+        driver: bridge
