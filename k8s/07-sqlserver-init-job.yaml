@@ -1,0 +1,56 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sqlserver-init
+  namespace: fcg-system
+  labels:
+    app: sqlserver-init
+    component: database
+spec:
+  ttlSecondsAfterFinished: 100
+  backoffLimit: 5
+  template:
+    metadata:
+      labels:
+        app: sqlserver-init
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: init-databases
+        image: mcr.microsoft.com/mssql-tools
+        command:
+        - /bin/bash
+        - -c
+        - |
+          echo "Waiting for SQL Server to be ready..."
+          for i in {1..30}; do
+            if /opt/mssql-tools/bin/sqlcmd -S sqlserver-service -U sa -P "$SA_PASSWORD" -Q "SELECT 1" &> /dev/null; then
+              echo "SQL Server is ready!"
+              break
+            fi
+            echo "Waiting... ($i/30)"
+            sleep 5
+          done
+          
+          echo "Creating databases..."
+          /opt/mssql-tools/bin/sqlcmd -S sqlserver-service -U sa -P "$SA_PASSWORD" -i /scripts/init-db.sql
+          
+          if [ $? -eq 0 ]; then
+            echo "✅ Databases created successfully!"
+          else
+            echo "❌ Failed to create databases"
+            exit 1
+          fi
+        env:
+        - name: SA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: sqlserver-secret
+              key: sa-password
+        volumeMounts:
+        - name: init-scripts
+          mountPath: /scripts
+      volumes:
+      - name: init-scripts
+        configMap:
+          name: init-db-config

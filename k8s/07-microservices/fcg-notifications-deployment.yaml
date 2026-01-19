@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fcg-notifications
+  namespace: fcg-system
+  labels:
+    app: fcg-notifications
+    component: microservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fcg-notifications
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: fcg-notifications
+        component: microservice
+    spec:
+      containers:
+      - name: fcg-notifications
+        image: fiapcr.azurecr.io/fcg-notifications:latest
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: aspnetcore-environment
+        - name: KafkaSettings__BootstrapServers
+          valueFrom:
+            configMapKeyRef:
+              name: kafka-config
+              key: bootstrap-servers
+        - name: Email__ConnectionString
+          valueFrom:
+            secretKeyRef:
+              name: azure-communication-secret
+              key: connection-string
+        - name: Email__SenderAddress
+          valueFrom:
+            secretKeyRef:
+              name: azure-communication-secret
+              key: sender-address
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"

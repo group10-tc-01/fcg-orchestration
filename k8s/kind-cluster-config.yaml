@@ -1,0 +1,46 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: fcg-cluster
+nodes:
+- role: control-plane
+  extraPortMappings:
+  # FCG Users API
+  - containerPort: 30050
+    hostPort: 5050
+    protocol: TCP
+  # FCG Users Metrics
+  - containerPort: 30052
+    hostPort: 5052
+    protocol: TCP
+  # FCG Payments API
+  - containerPort: 30060
+    hostPort: 5060
+    protocol: TCP
+  # FCG Payments Metrics
+  - containerPort: 30062
+    hostPort: 5062
+    protocol: TCP
+  # FCG Catalog API
+  - containerPort: 30070
+    hostPort: 5070
+    protocol: TCP
+  # FCG Catalog Metrics
+  - containerPort: 30072
+    hostPort: 5072
+    protocol: TCP
+  # Kafka UI
+  - containerPort: 30081
+    hostPort: 8081
+    protocol: TCP
+  # Seq Ingestion
+  - containerPort: 30341
+    hostPort: 5341
+    protocol: TCP
+  # Seq UI
+  - containerPort: 30342
+    hostPort: 5342
+    protocol: TCP
+  # Redis Insight
+  - containerPort: 30540
+    hostPort: 5540
+    protocol: TCP

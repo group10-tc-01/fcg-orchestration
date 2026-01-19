@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fcg-payments
+  namespace: fcg-system
+  labels:
+    app: fcg-payments
+    component: microservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fcg-payments
+  template:
+    metadata:
+      labels:
+        app: fcg-payments
+        component: microservice
+    spec:
+      containers:
+      - name: fcg-payments
+        image: fiapcr.azurecr.io/fcg-payments:latest
+        ports:
+        - containerPort: 8080
+          name: http
+        - containerPort: 8081
+          name: metrics
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: aspnetcore-environment
+        - name: ASPNETCORE_URLS
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: aspnetcore-urls
+        - name: ConnectionStrings__DefaultConnection
+          valueFrom:
+            secretKeyRef:
+              name: sqlserver-secret
+              key: connection-string-payments
+        - name: KafkaSettings__BootstrapServers
+          valueFrom:
+            configMapKeyRef:
+              name: kafka-config
+              key: bootstrap-servers
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "1000m"
