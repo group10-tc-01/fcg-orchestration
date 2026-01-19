@@ -33,7 +33,7 @@ kubectl wait --for=condition=ready pod -l app=kafka -n fcg-system --timeout=120s
 
 # Deploy de todos os microserviços
 echo "🎯 Fazendo deploy dos microserviços..."
-kubectl apply -f 07-microservices/
+kubectl apply -f 08-microservices/
 
 echo ""
 echo "✅ Deploy concluído!"
