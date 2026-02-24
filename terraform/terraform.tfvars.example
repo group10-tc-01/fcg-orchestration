@@ -3,39 +3,70 @@
 # Copie este arquivo para terraform.tfvars e preencha com seus valores
 # NUNCA commite terraform.tfvars no Git (já está no .gitignore)
 
+# ============================================================================
 # Resource Group
+# ============================================================================
 # resource_group_name = "fiap-fase-02"
 # location            = "eastus"
 
-# Azure Container Registry
-# acr_name            = "fiapcr"
-# acr_sku             = "Standard"
-# acr_admin_enabled   = true
+# tags = {
+#   environment = "dev"
+#   project     = "fiap-fase-02"
+#   managed_by  = "terraform"
+# }
 
+# ============================================================================
+# Azure Container Registry
+# ============================================================================
+# acr_name          = "fiapcr"
+# acr_sku           = "Standard"
+# acr_admin_enabled = true
+
+# ============================================================================
 # App Service Plan
+# ============================================================================
 # app_service_plan_name = "asp-fcg-microservices"
 # app_service_plan_sku  = "B1"
 
+# ============================================================================
 # Web Apps
+# ============================================================================
 # webapp_catalog_name  = "fcg-catalog"
 # webapp_payments_name = "fcg-payments"
 # webapp_users_name    = "fcg-users"
 
+# ============================================================================
 # Docker
+# ============================================================================
 # docker_image_tag = "latest"
 
+# ============================================================================
 # SQL Server (OBRIGATÓRIO - defina valores abaixo)
-# sql_location        = "brazilsouth"                 # Região para SQL Server (separada dos Web Apps em eastus)
-# sql_server_name     = "fcg-sql-server-unique123"    # Deve ser globalmente único
-# sql_server_version  = "12.0"
-# sql_admin_username  = "sqladmin"
-# sql_admin_password  = "SuaSenhaSegura123!"          # Mínimo 8 caracteres, complexidade Azure
-# sql_database_sku    = "Basic"
+# ============================================================================
+# Região onde o SQL Server será criado (pode ser diferente dos Web Apps)
+# sql_location = "brazilsouth"
 
-# IPs permitidos para acessar o SQL Server (opcional)
-# Formato: nome_da_regra = "IP_ADDRESS"
+# Nome do SQL Server (deve ser globalmente único na Azure)
+# sql_server_name = "fcg-sql-fiap-2026"
+
+# Versão do SQL Server (12.0 = SQL Server 2014)
+# sql_server_version = "12.0"
+
+# Credenciais do administrador do SQL Server
+# sql_admin_username = "sqladmin"
+sql_admin_password = "DEFINA_SUA_SENHA_AQUI"  # OBRIGATÓRIO - Mínimo 8 caracteres com complexidade
+
+# SKU dos databases (Basic, S0, S1, S2, S3, P1, P2, P4)
+# sql_database_sku = "Basic"
+
+# ============================================================================
+# Firewall do SQL Server - IPs Permitidos
+# ============================================================================
+# Adicione os IPs que devem ter acesso ao SQL Server
+# Formato: "nome_da_regra" = "endereço_ip"
+# 
 # sql_allowed_ips = {
-#   "MeuIP"        = "203.0.113.10"
-#   "EscritorioIP" = "198.51.100.42"
+#   "Escritorio"   = "203.0.113.10"
+#   "Casa"         = "198.51.100.42"
 # }
 
