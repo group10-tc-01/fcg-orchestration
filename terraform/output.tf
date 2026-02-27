@@ -159,3 +159,29 @@ output "connection_string_payments" {
   value       = "Server=${azurerm_mssql_server.main.fully_qualified_domain_name};Database=${azurerm_mssql_database.payments.name};User Id=${var.sql_admin_username};Password=${var.sql_admin_password};TrustServerCertificate=True;"
   sensitive   = true
 }
+
+# API Management outputs
+output "apim_id" {
+  description = "ID do Azure API Management"
+  value       = azurerm_api_management.main.id
+}
+
+output "apim_name" {
+  description = "Nome do Azure API Management"
+  value       = azurerm_api_management.main.name
+}
+
+output "apim_gateway_url" {
+  description = "URL do gateway do API Management (endpoint principal para chamadas às APIs)"
+  value       = azurerm_api_management.main.gateway_url
+}
+
+output "apim_portal_url" {
+  description = "URL do portal do desenvolvedor do API Management"
+  value       = azurerm_api_management.main.developer_portal_url
+}
+
+output "apim_management_url" {
+  description = "URL do portal de gerenciamento do API Management"
+  value       = azurerm_api_management.main.management_api_url
+}
