@@ -185,3 +185,64 @@ output "apim_management_url" {
   description = "URL do portal de gerenciamento do API Management"
   value       = azurerm_api_management.main.management_api_url
 }
+
+# Event Hub Namespace outputs
+output "eventhub_namespace_id" {
+  description = "ID do Event Hub Namespace"
+  value       = azurerm_eventhub_namespace.main.id
+}
+
+output "eventhub_namespace_name" {
+  description = "Nome do Event Hub Namespace"
+  value       = azurerm_eventhub_namespace.main.name
+}
+
+output "eventhub_namespace_connection_string" {
+  description = "Connection string primária do Event Hub Namespace"
+  value       = azurerm_eventhub_namespace.main.default_primary_connection_string
+  sensitive   = true
+}
+
+output "eventhub_namespace_kafka_endpoint" {
+  description = "Kafka endpoint do Event Hub Namespace"
+  value       = "${azurerm_eventhub_namespace.main.name}.servicebus.windows.net:9093"
+}
+
+# Event Hub outputs
+output "eventhub_user_created_id" {
+  description = "ID do Event Hub user-created"
+  value       = azurerm_eventhub.user_created.id
+}
+
+output "eventhub_payment_processed_id" {
+  description = "ID do Event Hub payment-processed"
+  value       = azurerm_eventhub.payment_processed.id
+}
+
+output "eventhub_order_placed_id" {
+  description = "ID do Event Hub order-placed"
+  value       = azurerm_eventhub.order_placed.id
+}
+
+# Application Insights outputs
+output "app_insights_users_id" {
+  description = "ID do Application Insights para Users"
+  value       = azurerm_application_insights.users.id
+}
+
+output "app_insights_users_instrumentation_key" {
+  description = "Instrumentation Key do Application Insights para Users"
+  value       = azurerm_application_insights.users.instrumentation_key
+  sensitive   = true
+}
+
+output "app_insights_users_connection_string" {
+  description = "Connection String do Application Insights para Users"
+  value       = azurerm_application_insights.users.connection_string
+  sensitive   = true
+}
+
+output "app_insights_users_app_id" {
+  description = "Application ID do Application Insights para Users"
+  value       = azurerm_application_insights.users.app_id
+}

@@ -41,11 +41,25 @@ resource "azurerm_linux_web_app" "catalog" {
   }
 
   app_settings = {
+    # Docker Registry
     "DOCKER_REGISTRY_SERVER_URL"           = "https://${azurerm_container_registry.acr.login_server}"
     "DOCKER_REGISTRY_SERVER_USERNAME"      = azurerm_container_registry.acr.admin_username
     "DOCKER_REGISTRY_SERVER_PASSWORD"      = azurerm_container_registry.acr.admin_password
     "WEBSITES_ENABLE_APP_SERVICE_STORAGE"  = "false"
+    
+    # Container Port Configuration
+    "WEBSITES_PORT"                        = "8080"
+    "ASPNETCORE_ENVIRONMENT"               = "Production"
+    
+    # Database Connection String
     "ConnectionStrings__DefaultConnection" = "Server=${azurerm_mssql_server.main.fully_qualified_domain_name};Database=${azurerm_mssql_database.catalog.name};User Id=${var.sql_admin_username};Password=${var.sql_admin_password};TrustServerCertificate=True;"
+    
+    # JWT Settings
+    "JwtSettings__SecretKey"                    = "z3F+7sR8vN5YlG1aXb2j8KqH0yL9uD3vM4pQ5rT6sU8="
+    "JwtSettings__Issuer"                       = "FCG-Catalog"
+    "JwtSettings__Audience"                     = "FCG-Client"
+    "JwtSettings__AccessTokenExpirationMinutes" = "60"
+    "JwtSettings__RefreshTokenExpirationDays"   = "7"
   }
 }
 
@@ -66,11 +80,25 @@ resource "azurerm_linux_web_app" "payments" {
   }
 
   app_settings = {
+    # Docker Registry
     "DOCKER_REGISTRY_SERVER_URL"           = "https://${azurerm_container_registry.acr.login_server}"
     "DOCKER_REGISTRY_SERVER_USERNAME"      = azurerm_container_registry.acr.admin_username
     "DOCKER_REGISTRY_SERVER_PASSWORD"      = azurerm_container_registry.acr.admin_password
     "WEBSITES_ENABLE_APP_SERVICE_STORAGE"  = "false"
+    
+    # Container Port Configuration
+    "WEBSITES_PORT"                        = "8080"
+    "ASPNETCORE_ENVIRONMENT"               = "Production"
+    
+    # Database Connection String
     "ConnectionStrings__DefaultConnection" = "Server=${azurerm_mssql_server.main.fully_qualified_domain_name};Database=${azurerm_mssql_database.payments.name};User Id=${var.sql_admin_username};Password=${var.sql_admin_password};TrustServerCertificate=True;"
+    
+    # JWT Settings
+    "JwtSettings__SecretKey"                    = "z3F+7sR8vN5YlG1aXb2j8KqH0yL9uD3vM4pQ5rT6sU8="
+    "JwtSettings__Issuer"                       = "FCG-Payments"
+    "JwtSettings__Audience"                     = "FCG-Client"
+    "JwtSettings__AccessTokenExpirationMinutes" = "60"
+    "JwtSettings__RefreshTokenExpirationDays"   = "7"
   }
 }
 
@@ -91,11 +119,46 @@ resource "azurerm_linux_web_app" "users" {
   }
 
   app_settings = {
+    # Docker Registry
     "DOCKER_REGISTRY_SERVER_URL"           = "https://${azurerm_container_registry.acr.login_server}"
     "DOCKER_REGISTRY_SERVER_USERNAME"      = azurerm_container_registry.acr.admin_username
     "DOCKER_REGISTRY_SERVER_PASSWORD"      = azurerm_container_registry.acr.admin_password
     "WEBSITES_ENABLE_APP_SERVICE_STORAGE"  = "false"
+    "DOCKER_ENABLE_CI"                     = "true"
+    
+    # Container Port Configuration
+    "WEBSITES_PORT"                        = "8080"
+    "ASPNETCORE_ENVIRONMENT"               = "Production"
+    
+    # Database Connection String
     "ConnectionStrings__DefaultConnection" = "Server=${azurerm_mssql_server.main.fully_qualified_domain_name};Database=${azurerm_mssql_database.users.name};User Id=${var.sql_admin_username};Password=${var.sql_admin_password};TrustServerCertificate=True;"
+    
+    # JWT Settings
+    "JwtSettings__SecretKey"                    = "z3F+7sR8vN5YlG1aXb2j8KqH0yL9uD3vM4pQ5rT6sU8="
+    "JwtSettings__Issuer"                       = "FCG-User"
+    "JwtSettings__Audience"                     = "FCG-Client"
+    "JwtSettings__AccessTokenExpirationMinutes" = "60"
+    "JwtSettings__RefreshTokenExpirationDays"   = "7"
+    
+    # Application Insights
+    "APPINSIGHTS_INSTRUMENTATIONKEY"             = azurerm_application_insights.users.instrumentation_key
+    "APPLICATIONINSIGHTS_CONNECTION_STRING"      = azurerm_application_insights.users.connection_string
+    "ApplicationInsightsAgent_EXTENSION_VERSION" = "~3"
+    "APPINSIGHTS_PROFILERFEATURE_VERSION"        = "1.0.0"
+    "APPINSIGHTS_SNAPSHOTFEATURE_VERSION"        = "1.0.0"
+    "DiagnosticServices_EXTENSION_VERSION"       = "~3"
+    "InstrumentationEngine_EXTENSION_VERSION"    = "disabled"
+    "SnapshotDebugger_EXTENSION_VERSION"         = "disabled"
+    "XDT_MicrosoftApplicationInsights_BaseExtensions" = "disabled"
+    "XDT_MicrosoftApplicationInsights_Mode"      = "recommended"
+    "XDT_MicrosoftApplicationInsights_PreemptSdk" = "disabled"
+    "APPLICATIONINSIGHTS_CONFIGURATION_CONTENT"  = ""
+    
+    # Kafka/Event Hub Settings
+    "KafkaSettings__BootstrapServers"     = "${azurerm_eventhub_namespace.main.name}.servicebus.windows.net:9093"
+    "KafkaSettings__SaslUsername"         = "$ConnectionString"
+    "KafkaSettings__SaslPassword"         = azurerm_eventhub_namespace.main.default_primary_connection_string
+    "KafkaSettings__UserCreatedTopic"     = azurerm_eventhub.user_created.name
   }
 }
 
@@ -174,4 +237,57 @@ resource "azurerm_api_management" "main" {
   tags                = var.tags
 
   public_network_access_enabled = true
+}
+
+# Event Hub Namespace (Kafka-enabled)
+resource "azurerm_eventhub_namespace" "main" {
+  name                = var.eventhub_namespace_name
+  location            = var.eventhub_location
+  resource_group_name = azurerm_resource_group.main.name
+  sku                 = var.eventhub_namespace_sku
+  capacity            = var.eventhub_namespace_capacity
+  tags                = var.tags
+
+  minimum_tls_version           = "1.2"
+  public_network_access_enabled = true
+  zone_redundant                = true
+}
+
+# Event Hub - User Created
+resource "azurerm_eventhub" "user_created" {
+  name                = var.eventhub_user_created_name
+  namespace_name      = azurerm_eventhub_namespace.main.name
+  resource_group_name = azurerm_resource_group.main.name
+  partition_count     = var.eventhub_partition_count
+  message_retention   = var.eventhub_message_retention
+}
+
+# Event Hub - Payment Processed
+resource "azurerm_eventhub" "payment_processed" {
+  name                = var.eventhub_payment_processed_name
+  namespace_name      = azurerm_eventhub_namespace.main.name
+  resource_group_name = azurerm_resource_group.main.name
+  partition_count     = var.eventhub_partition_count
+  message_retention   = var.eventhub_message_retention
+}
+
+# Event Hub - Order Placed
+resource "azurerm_eventhub" "order_placed" {
+  name                = var.eventhub_order_placed_name
+  namespace_name      = azurerm_eventhub_namespace.main.name
+  resource_group_name = azurerm_resource_group.main.name
+  partition_count     = var.eventhub_partition_count
+  message_retention   = var.eventhub_message_retention
+}
+
+# Application Insights - Users
+resource "azurerm_application_insights" "users" {
+  name                = var.app_insights_users_name
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+  application_type    = "web"
+  retention_in_days   = var.app_insights_retention_days
+  tags                = var.tags
+
+  workspace_id = var.app_insights_workspace_id
 }
