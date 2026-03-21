@@ -47,6 +47,24 @@ module "eventhub" {
   tags                            = var.tags
 }
 
+module "keyvault" {
+  source = "./modules/keyvault"
+
+  key_vault_name      = var.key_vault_name
+  resource_group_name = module.resource_group.name
+  location            = module.resource_group.location
+  tags                = var.tags
+
+  webapp_principal_ids = module.webapp.webapp_principal_ids
+
+  sql_server_fqdn            = module.database.server_fqdn
+  sql_admin_username         = var.sql_admin_username
+  sql_admin_password         = var.sql_admin_password
+  sql_database_catalog_name  = module.database.database_catalog_name
+  sql_database_users_name    = module.database.database_users_name
+  sql_database_payments_name = module.database.database_payments_name
+}
+
 module "webapp" {
   source = "./modules/webapp"
 
@@ -59,16 +77,13 @@ module "webapp" {
   webapp_users_name     = var.webapp_users_name
   docker_image_tag      = var.docker_image_tag
 
-  acr_login_server  = module.acr.login_server
+  acr_login_server   = module.acr.login_server
   acr_admin_username = module.acr.admin_username
   acr_admin_password = module.acr.admin_password
 
-  sql_server_fqdn            = module.database.server_fqdn
-  sql_admin_username         = var.sql_admin_username
-  sql_admin_password         = var.sql_admin_password
-  sql_database_catalog_name  = module.database.database_catalog_name
-  sql_database_users_name    = module.database.database_users_name
-  sql_database_payments_name = module.database.database_payments_name
+  kv_secret_conn_catalog_uri  = module.keyvault.secret_conn_catalog_uri
+  kv_secret_conn_users_uri    = module.keyvault.secret_conn_users_uri
+  kv_secret_conn_payments_uri = module.keyvault.secret_conn_payments_uri
 
   eventhub_kafka_endpoint    = module.eventhub.kafka_endpoint
   eventhub_connection_string = module.eventhub.namespace_connection_string

@@ -52,3 +52,13 @@ output "webapp_users_default_hostname" {
   description = "Hostname padrão do Web App fcg-users"
   value       = azurerm_linux_web_app.users.default_hostname
 }
+
+# Managed Identity principal IDs para acesso ao Key Vault
+output "webapp_principal_ids" {
+  description = "Mapa de nome -> principal_id das Managed Identities dos Web Apps"
+  value = {
+    catalog  = azurerm_linux_web_app.catalog.identity[0].principal_id
+    payments = azurerm_linux_web_app.payments.identity[0].principal_id
+    users    = azurerm_linux_web_app.users.identity[0].principal_id
+  }
+}

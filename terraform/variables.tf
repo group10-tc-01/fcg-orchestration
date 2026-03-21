@@ -15,7 +15,7 @@ variable "tags" {
   type        = map(string)
   default = {
     environment = "dev"
-    project     = "fiap-fase-02"
+    project     = "fiap-fase-03"
     managed_by  = "terraform"
   }
 }
@@ -127,6 +127,13 @@ variable "sql_allowed_ips" {
   description = "Mapa de IPs permitidos para acessar o SQL Server (nome -> IP)"
   type        = map(string)
   default     = {}
+}
+
+# Key Vault variables
+variable "key_vault_name" {
+  description = "Nome do Azure Key Vault (deve ser globalmente único)"
+  type        = string
+  default     = "fcg-kv-fiap-2026"
 }
 
 # API Management variables

@@ -1,3 +1,21 @@
+locals {
+  docker_settings = {
+    "DOCKER_REGISTRY_SERVER_URL"          = "https://${var.acr_login_server}"
+    "DOCKER_REGISTRY_SERVER_USERNAME"     = var.acr_admin_username
+    "DOCKER_REGISTRY_SERVER_PASSWORD"     = var.acr_admin_password
+    "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
+    "WEBSITES_PORT"                       = "8080"
+    "ASPNETCORE_ENVIRONMENT"              = "Production"
+  }
+
+  jwt_settings_base = {
+    "JwtSettings__SecretKey"                    = "z3F+7sR8vN5YlG1aXb2j8KqH0yL9uD3vM4pQ5rT6sU8="
+    "JwtSettings__Audience"                     = "FCG-Client"
+    "JwtSettings__AccessTokenExpirationMinutes" = "60"
+    "JwtSettings__RefreshTokenExpirationDays"   = "7"
+  }
+}
+
 resource "azurerm_service_plan" "main" {
   name                = var.app_service_plan_name
   resource_group_name = var.resource_group_name
@@ -15,6 +33,10 @@ resource "azurerm_linux_web_app" "catalog" {
   https_only          = true
   tags                = var.tags
 
+  identity {
+    type = "SystemAssigned"
+  }
+
   site_config {
     always_on = true
     application_stack {
@@ -23,23 +45,10 @@ resource "azurerm_linux_web_app" "catalog" {
     }
   }
 
-  app_settings = {
-    "DOCKER_REGISTRY_SERVER_URL"           = "https://${var.acr_login_server}"
-    "DOCKER_REGISTRY_SERVER_USERNAME"      = var.acr_admin_username
-    "DOCKER_REGISTRY_SERVER_PASSWORD"      = var.acr_admin_password
-    "WEBSITES_ENABLE_APP_SERVICE_STORAGE"  = "false"
-
-    "WEBSITES_PORT"        = "8080"
-    "ASPNETCORE_ENVIRONMENT" = "Production"
-
-    "ConnectionStrings__DefaultConnection" = "Server=${var.sql_server_fqdn};Database=${var.sql_database_catalog_name};User Id=${var.sql_admin_username};Password=${var.sql_admin_password};TrustServerCertificate=True;"
-
-    "JwtSettings__SecretKey"                    = "z3F+7sR8vN5YlG1aXb2j8KqH0yL9uD3vM4pQ5rT6sU8="
-    "JwtSettings__Issuer"                       = "FCG-Catalog"
-    "JwtSettings__Audience"                     = "FCG-Client"
-    "JwtSettings__AccessTokenExpirationMinutes" = "60"
-    "JwtSettings__RefreshTokenExpirationDays"   = "7"
-  }
+  app_settings = merge(local.docker_settings, local.jwt_settings_base, {
+    "JwtSettings__Issuer"                  = "FCG-Catalog"
+    "ConnectionStrings__DefaultConnection" = "@Microsoft.KeyVault(SecretUri=${var.kv_secret_conn_catalog_uri})"
+  })
 }
 
 resource "azurerm_linux_web_app" "payments" {
@@ -50,6 +59,10 @@ resource "azurerm_linux_web_app" "payments" {
   https_only          = true
   tags                = var.tags
 
+  identity {
+    type = "SystemAssigned"
+  }
+
   site_config {
     always_on = true
     application_stack {
@@ -58,23 +71,10 @@ resource "azurerm_linux_web_app" "payments" {
     }
   }
 
-  app_settings = {
-    "DOCKER_REGISTRY_SERVER_URL"           = "https://${var.acr_login_server}"
-    "DOCKER_REGISTRY_SERVER_USERNAME"      = var.acr_admin_username
-    "DOCKER_REGISTRY_SERVER_PASSWORD"      = var.acr_admin_password
-    "WEBSITES_ENABLE_APP_SERVICE_STORAGE"  = "false"
-
-    "WEBSITES_PORT"        = "8080"
-    "ASPNETCORE_ENVIRONMENT" = "Production"
-
-    "ConnectionStrings__DefaultConnection" = "Server=${var.sql_server_fqdn};Database=${var.sql_database_payments_name};User Id=${var.sql_admin_username};Password=${var.sql_admin_password};TrustServerCertificate=True;"
-
-    "JwtSettings__SecretKey"                    = "z3F+7sR8vN5YlG1aXb2j8KqH0yL9uD3vM4pQ5rT6sU8="
-    "JwtSettings__Issuer"                       = "FCG-Payments"
-    "JwtSettings__Audience"                     = "FCG-Client"
-    "JwtSettings__AccessTokenExpirationMinutes" = "60"
-    "JwtSettings__RefreshTokenExpirationDays"   = "7"
-  }
+  app_settings = merge(local.docker_settings, local.jwt_settings_base, {
+    "JwtSettings__Issuer"                  = "FCG-Payments"
+    "ConnectionStrings__DefaultConnection" = "@Microsoft.KeyVault(SecretUri=${var.kv_secret_conn_payments_uri})"
+  })
 }
 
 resource "azurerm_linux_web_app" "users" {
@@ -85,6 +85,10 @@ resource "azurerm_linux_web_app" "users" {
   https_only          = true
   tags                = var.tags
 
+  identity {
+    type = "SystemAssigned"
+  }
+
   site_config {
     always_on = true
     application_stack {
@@ -93,27 +97,13 @@ resource "azurerm_linux_web_app" "users" {
     }
   }
 
-  app_settings = {
-    "DOCKER_REGISTRY_SERVER_URL"           = "https://${var.acr_login_server}"
-    "DOCKER_REGISTRY_SERVER_USERNAME"      = var.acr_admin_username
-    "DOCKER_REGISTRY_SERVER_PASSWORD"      = var.acr_admin_password
-    "WEBSITES_ENABLE_APP_SERVICE_STORAGE"  = "false"
+  app_settings = merge(local.docker_settings, local.jwt_settings_base, {
     "DOCKER_ENABLE_CI"                     = "true"
-
-    "WEBSITES_PORT"        = "8080"
-    "ASPNETCORE_ENVIRONMENT" = "Production"
-
-    "ConnectionStrings__DefaultConnection" = "Server=${var.sql_server_fqdn};Database=${var.sql_database_users_name};User Id=${var.sql_admin_username};Password=${var.sql_admin_password};TrustServerCertificate=True;"
-
-    "JwtSettings__SecretKey"                    = "z3F+7sR8vN5YlG1aXb2j8KqH0yL9uD3vM4pQ5rT6sU8="
-    "JwtSettings__Issuer"                       = "FCG-User"
-    "JwtSettings__Audience"                     = "FCG-Client"
-    "JwtSettings__AccessTokenExpirationMinutes" = "60"
-    "JwtSettings__RefreshTokenExpirationDays"   = "7"
-
-    "KafkaSettings__BootstrapServers" = var.eventhub_kafka_endpoint
-    "KafkaSettings__SaslUsername"     = "$ConnectionString"
-    "KafkaSettings__SaslPassword"     = var.eventhub_connection_string
-    "KafkaSettings__UserCreatedTopic" = var.eventhub_user_created_name
-  }
+    "JwtSettings__Issuer"                  = "FCG-User"
+    "ConnectionStrings__DefaultConnection" = "@Microsoft.KeyVault(SecretUri=${var.kv_secret_conn_users_uri})"
+    "KafkaSettings__BootstrapServers"      = var.eventhub_kafka_endpoint
+    "KafkaSettings__SaslUsername"          = "$ConnectionString"
+    "KafkaSettings__SaslPassword"          = var.eventhub_connection_string
+    "KafkaSettings__UserCreatedTopic"      = var.eventhub_user_created_name
+  })
 }

@@ -143,23 +143,20 @@ output "sql_database_payments_name" {
   value       = module.database.database_payments_name
 }
 
-# Connection Strings
-output "connection_string_catalog" {
-  description = "Connection string para o database fcg_catalog"
-  value       = "Server=${module.database.server_fqdn};Database=${module.database.database_catalog_name};User Id=${var.sql_admin_username};Password=${var.sql_admin_password};TrustServerCertificate=True;"
-  sensitive   = true
+# Key Vault
+output "key_vault_id" {
+  description = "ID do Azure Key Vault"
+  value       = module.keyvault.key_vault_id
 }
 
-output "connection_string_users" {
-  description = "Connection string para o database fcg_users"
-  value       = "Server=${module.database.server_fqdn};Database=${module.database.database_users_name};User Id=${var.sql_admin_username};Password=${var.sql_admin_password};TrustServerCertificate=True;"
-  sensitive   = true
+output "key_vault_name" {
+  description = "Nome do Azure Key Vault"
+  value       = module.keyvault.key_vault_name
 }
 
-output "connection_string_payments" {
-  description = "Connection string para o database fcg_payments"
-  value       = "Server=${module.database.server_fqdn};Database=${module.database.database_payments_name};User Id=${var.sql_admin_username};Password=${var.sql_admin_password};TrustServerCertificate=True;"
-  sensitive   = true
+output "key_vault_uri" {
+  description = "URI do Azure Key Vault"
+  value       = module.keyvault.key_vault_uri
 }
 
 # API Management

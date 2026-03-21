@@ -62,35 +62,19 @@ variable "acr_admin_password" {
   sensitive   = true
 }
 
-# Database inputs
-variable "sql_server_fqdn" {
-  description = "FQDN do Azure SQL Server"
+# Key Vault secret URIs (connection strings)
+variable "kv_secret_conn_catalog_uri" {
+  description = "URI do secret sql-connection-catalog no Key Vault"
   type        = string
 }
 
-variable "sql_admin_username" {
-  description = "Username do administrador do SQL Server"
+variable "kv_secret_conn_users_uri" {
+  description = "URI do secret sql-connection-users no Key Vault"
   type        = string
 }
 
-variable "sql_admin_password" {
-  description = "Senha do administrador do SQL Server"
-  type        = string
-  sensitive   = true
-}
-
-variable "sql_database_catalog_name" {
-  description = "Nome do database fcg_catalog"
-  type        = string
-}
-
-variable "sql_database_users_name" {
-  description = "Nome do database fcg_users"
-  type        = string
-}
-
-variable "sql_database_payments_name" {
-  description = "Nome do database fcg_payments"
+variable "kv_secret_conn_payments_uri" {
+  description = "URI do secret sql-connection-payments no Key Vault"
   type        = string
 }
 
