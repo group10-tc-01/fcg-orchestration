@@ -111,19 +111,6 @@ resource "azurerm_linux_web_app" "users" {
     "JwtSettings__AccessTokenExpirationMinutes" = "60"
     "JwtSettings__RefreshTokenExpirationDays"   = "7"
 
-    "APPINSIGHTS_INSTRUMENTATIONKEY"             = var.app_insights_instrumentation_key
-    "APPLICATIONINSIGHTS_CONNECTION_STRING"      = var.app_insights_connection_string
-    "ApplicationInsightsAgent_EXTENSION_VERSION" = "~3"
-    "APPINSIGHTS_PROFILERFEATURE_VERSION"        = "1.0.0"
-    "APPINSIGHTS_SNAPSHOTFEATURE_VERSION"        = "1.0.0"
-    "DiagnosticServices_EXTENSION_VERSION"       = "~3"
-    "InstrumentationEngine_EXTENSION_VERSION"    = "disabled"
-    "SnapshotDebugger_EXTENSION_VERSION"         = "disabled"
-    "XDT_MicrosoftApplicationInsights_BaseExtensions" = "disabled"
-    "XDT_MicrosoftApplicationInsights_Mode"      = "recommended"
-    "XDT_MicrosoftApplicationInsights_PreemptSdk" = "disabled"
-    "APPLICATIONINSIGHTS_CONFIGURATION_CONTENT"  = ""
-
     "KafkaSettings__BootstrapServers" = var.eventhub_kafka_endpoint
     "KafkaSettings__SaslUsername"     = "$ConnectionString"
     "KafkaSettings__SaslPassword"     = var.eventhub_connection_string

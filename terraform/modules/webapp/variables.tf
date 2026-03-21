@@ -94,19 +94,6 @@ variable "sql_database_payments_name" {
   type        = string
 }
 
-# Monitoring inputs
-variable "app_insights_instrumentation_key" {
-  description = "Instrumentation Key do Application Insights"
-  type        = string
-  sensitive   = true
-}
-
-variable "app_insights_connection_string" {
-  description = "Connection String do Application Insights"
-  type        = string
-  sensitive   = true
-}
-
 # Event Hub inputs
 variable "eventhub_kafka_endpoint" {
   description = "Kafka endpoint do Event Hub Namespace"

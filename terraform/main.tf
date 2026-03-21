@@ -70,9 +70,6 @@ module "webapp" {
   sql_database_users_name    = module.database.database_users_name
   sql_database_payments_name = module.database.database_payments_name
 
-  app_insights_instrumentation_key = module.monitoring.users_instrumentation_key
-  app_insights_connection_string   = module.monitoring.users_connection_string
-
   eventhub_kafka_endpoint    = module.eventhub.kafka_endpoint
   eventhub_connection_string = module.eventhub.namespace_connection_string
   eventhub_user_created_name = module.eventhub.eventhub_user_created_name
