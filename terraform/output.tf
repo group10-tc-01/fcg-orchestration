@@ -1,248 +1,226 @@
+# Resource Group
 output "resource_group_id" {
   description = "ID do Resource Group"
-  value       = azurerm_resource_group.main.id
+  value       = module.resource_group.id
 }
 
 output "resource_group_name" {
   description = "Nome do Resource Group"
-  value       = azurerm_resource_group.main.name
+  value       = module.resource_group.name
 }
 
 output "resource_group_location" {
   description = "Localização do Resource Group"
-  value       = azurerm_resource_group.main.location
+  value       = module.resource_group.location
 }
 
+# ACR
 output "acr_id" {
   description = "ID do Azure Container Registry"
-  value       = azurerm_container_registry.acr.id
+  value       = module.acr.id
 }
 
 output "acr_login_server" {
   description = "URL do login server do ACR"
-  value       = azurerm_container_registry.acr.login_server
+  value       = module.acr.login_server
 }
 
 output "acr_admin_username" {
   description = "Username admin do ACR"
-  value       = azurerm_container_registry.acr.admin_username
+  value       = module.acr.admin_username
   sensitive   = true
 }
 
 output "acr_admin_password" {
   description = "Password admin do ACR"
-  value       = azurerm_container_registry.acr.admin_password
+  value       = module.acr.admin_password
   sensitive   = true
 }
 
-# App Service Plan outputs
+# App Service Plan
 output "app_service_plan_id" {
   description = "ID do App Service Plan"
-  value       = azurerm_service_plan.main.id
+  value       = module.webapp.app_service_plan_id
 }
 
 output "app_service_plan_name" {
   description = "Nome do App Service Plan"
-  value       = azurerm_service_plan.main.name
+  value       = module.webapp.app_service_plan_name
 }
 
-# Web App Catalog outputs
+# Web App Catalog
 output "webapp_catalog_id" {
   description = "ID do Web App fcg-catalog"
-  value       = azurerm_linux_web_app.catalog.id
+  value       = module.webapp.webapp_catalog_id
 }
 
 output "webapp_catalog_url" {
   description = "URL do Web App fcg-catalog"
-  value       = "https://${azurerm_linux_web_app.catalog.default_hostname}"
+  value       = module.webapp.webapp_catalog_url
 }
 
 output "webapp_catalog_default_hostname" {
   description = "Hostname padrão do Web App fcg-catalog"
-  value       = azurerm_linux_web_app.catalog.default_hostname
+  value       = module.webapp.webapp_catalog_default_hostname
 }
 
-# Web App Payments outputs
+# Web App Payments
 output "webapp_payments_id" {
   description = "ID do Web App fcg-payments"
-  value       = azurerm_linux_web_app.payments.id
+  value       = module.webapp.webapp_payments_id
 }
 
 output "webapp_payments_url" {
   description = "URL do Web App fcg-payments"
-  value       = "https://${azurerm_linux_web_app.payments.default_hostname}"
+  value       = module.webapp.webapp_payments_url
 }
 
 output "webapp_payments_default_hostname" {
   description = "Hostname padrão do Web App fcg-payments"
-  value       = azurerm_linux_web_app.payments.default_hostname
+  value       = module.webapp.webapp_payments_default_hostname
 }
 
-# Web App Users outputs
+# Web App Users
 output "webapp_users_id" {
   description = "ID do Web App fcg-users"
-  value       = azurerm_linux_web_app.users.id
+  value       = module.webapp.webapp_users_id
 }
 
 output "webapp_users_url" {
   description = "URL do Web App fcg-users"
-  value       = "https://${azurerm_linux_web_app.users.default_hostname}"
+  value       = module.webapp.webapp_users_url
 }
 
 output "webapp_users_default_hostname" {
   description = "Hostname padrão do Web App fcg-users"
-  value       = azurerm_linux_web_app.users.default_hostname
+  value       = module.webapp.webapp_users_default_hostname
 }
 
-# SQL Server outputs
+# SQL Server
 output "sql_server_id" {
   description = "ID do Azure SQL Server"
-  value       = azurerm_mssql_server.main.id
+  value       = module.database.server_id
 }
 
 output "sql_server_fqdn" {
   description = "FQDN do Azure SQL Server"
-  value       = azurerm_mssql_server.main.fully_qualified_domain_name
+  value       = module.database.server_fqdn
 }
 
 output "sql_server_name" {
   description = "Nome do Azure SQL Server"
-  value       = azurerm_mssql_server.main.name
+  value       = module.database.server_name
 }
 
-# SQL Database outputs
+# SQL Databases
 output "sql_database_catalog_id" {
   description = "ID do database fcg_catalog"
-  value       = azurerm_mssql_database.catalog.id
+  value       = module.database.database_catalog_id
 }
 
 output "sql_database_catalog_name" {
   description = "Nome do database fcg_catalog"
-  value       = azurerm_mssql_database.catalog.name
+  value       = module.database.database_catalog_name
 }
 
 output "sql_database_users_id" {
   description = "ID do database fcg_users"
-  value       = azurerm_mssql_database.users.id
+  value       = module.database.database_users_id
 }
 
 output "sql_database_users_name" {
   description = "Nome do database fcg_users"
-  value       = azurerm_mssql_database.users.name
+  value       = module.database.database_users_name
 }
 
 output "sql_database_payments_id" {
   description = "ID do database fcg_payments"
-  value       = azurerm_mssql_database.payments.id
+  value       = module.database.database_payments_id
 }
 
 output "sql_database_payments_name" {
   description = "Nome do database fcg_payments"
-  value       = azurerm_mssql_database.payments.name
+  value       = module.database.database_payments_name
 }
 
-# Connection Strings (sensitive)
+# Connection Strings
 output "connection_string_catalog" {
   description = "Connection string para o database fcg_catalog"
-  value       = "Server=${azurerm_mssql_server.main.fully_qualified_domain_name};Database=${azurerm_mssql_database.catalog.name};User Id=${var.sql_admin_username};Password=${var.sql_admin_password};TrustServerCertificate=True;"
+  value       = "Server=${module.database.server_fqdn};Database=${module.database.database_catalog_name};User Id=${var.sql_admin_username};Password=${var.sql_admin_password};TrustServerCertificate=True;"
   sensitive   = true
 }
 
 output "connection_string_users" {
   description = "Connection string para o database fcg_users"
-  value       = "Server=${azurerm_mssql_server.main.fully_qualified_domain_name};Database=${azurerm_mssql_database.users.name};User Id=${var.sql_admin_username};Password=${var.sql_admin_password};TrustServerCertificate=True;"
+  value       = "Server=${module.database.server_fqdn};Database=${module.database.database_users_name};User Id=${var.sql_admin_username};Password=${var.sql_admin_password};TrustServerCertificate=True;"
   sensitive   = true
 }
 
 output "connection_string_payments" {
   description = "Connection string para o database fcg_payments"
-  value       = "Server=${azurerm_mssql_server.main.fully_qualified_domain_name};Database=${azurerm_mssql_database.payments.name};User Id=${var.sql_admin_username};Password=${var.sql_admin_password};TrustServerCertificate=True;"
+  value       = "Server=${module.database.server_fqdn};Database=${module.database.database_payments_name};User Id=${var.sql_admin_username};Password=${var.sql_admin_password};TrustServerCertificate=True;"
   sensitive   = true
 }
 
-# API Management outputs
+# API Management
 output "apim_id" {
   description = "ID do Azure API Management"
-  value       = azurerm_api_management.main.id
+  value       = module.apim.id
 }
 
 output "apim_name" {
   description = "Nome do Azure API Management"
-  value       = azurerm_api_management.main.name
+  value       = module.apim.name
 }
 
 output "apim_gateway_url" {
-  description = "URL do gateway do API Management (endpoint principal para chamadas às APIs)"
-  value       = azurerm_api_management.main.gateway_url
+  description = "URL do gateway do API Management"
+  value       = module.apim.gateway_url
 }
 
 output "apim_portal_url" {
   description = "URL do portal do desenvolvedor do API Management"
-  value       = azurerm_api_management.main.developer_portal_url
+  value       = module.apim.portal_url
 }
 
 output "apim_management_url" {
   description = "URL do portal de gerenciamento do API Management"
-  value       = azurerm_api_management.main.management_api_url
+  value       = module.apim.management_url
 }
 
-# Event Hub Namespace outputs
+# Event Hub
 output "eventhub_namespace_id" {
   description = "ID do Event Hub Namespace"
-  value       = azurerm_eventhub_namespace.main.id
+  value       = module.eventhub.namespace_id
 }
 
 output "eventhub_namespace_name" {
   description = "Nome do Event Hub Namespace"
-  value       = azurerm_eventhub_namespace.main.name
+  value       = module.eventhub.namespace_name
 }
 
 output "eventhub_namespace_connection_string" {
   description = "Connection string primária do Event Hub Namespace"
-  value       = azurerm_eventhub_namespace.main.default_primary_connection_string
+  value       = module.eventhub.namespace_connection_string
   sensitive   = true
 }
 
 output "eventhub_namespace_kafka_endpoint" {
   description = "Kafka endpoint do Event Hub Namespace"
-  value       = "${azurerm_eventhub_namespace.main.name}.servicebus.windows.net:9093"
+  value       = module.eventhub.kafka_endpoint
 }
 
-# Event Hub outputs
 output "eventhub_user_created_id" {
   description = "ID do Event Hub user-created"
-  value       = azurerm_eventhub.user_created.id
+  value       = module.eventhub.eventhub_user_created_id
 }
 
 output "eventhub_payment_processed_id" {
   description = "ID do Event Hub payment-processed"
-  value       = azurerm_eventhub.payment_processed.id
+  value       = module.eventhub.eventhub_payment_processed_id
 }
 
 output "eventhub_order_placed_id" {
   description = "ID do Event Hub order-placed"
-  value       = azurerm_eventhub.order_placed.id
-}
-
-# Application Insights outputs
-output "app_insights_users_id" {
-  description = "ID do Application Insights para Users"
-  value       = azurerm_application_insights.users.id
-}
-
-output "app_insights_users_instrumentation_key" {
-  description = "Instrumentation Key do Application Insights para Users"
-  value       = azurerm_application_insights.users.instrumentation_key
-  sensitive   = true
-}
-
-output "app_insights_users_connection_string" {
-  description = "Connection String do Application Insights para Users"
-  value       = azurerm_application_insights.users.connection_string
-  sensitive   = true
-}
-
-output "app_insights_users_app_id" {
-  description = "Application ID do Application Insights para Users"
-  value       = azurerm_application_insights.users.app_id
+  value       = module.eventhub.eventhub_order_placed_id
 }

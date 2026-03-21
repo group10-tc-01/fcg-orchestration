@@ -1,7 +1,7 @@
 variable "resource_group_name" {
   description = "Nome do Resource Group"
   type        = string
-  default     = "fiap-fase-02"
+  default     = "fiap-fase-03"
 }
 
 variable "location" {
@@ -229,27 +229,3 @@ variable "eventhub_message_retention" {
     error_message = "Message retention deve estar entre 1 e 7 dias para SKU Standard."
   }
 }
-
-# Application Insights variables
-variable "app_insights_users_name" {
-  description = "Nome do Application Insights para o microsserviço Users"
-  type        = string
-  default     = "fcg-users"
-}
-
-variable "app_insights_retention_days" {
-  description = "Dias de retenção do Application Insights"
-  type        = number
-  default     = 90
-  validation {
-    condition     = contains([30, 60, 90, 120, 180, 270, 365, 550, 730], var.app_insights_retention_days)
-    error_message = "Retention deve ser um dos valores válidos: 30, 60, 90, 120, 180, 270, 365, 550, 730."
-  }
-}
-
-variable "app_insights_workspace_id" {
-  description = "ID do Log Analytics Workspace para Application Insights"
-  type        = string
-  default     = "/subscriptions/d4af460f-e431-42e5-884c-d0811f48cf99/resourceGroups/DefaultResourceGroup-EUS/providers/Microsoft.OperationalInsights/workspaces/DefaultWorkspace-d4af460f-e431-42e5-884c-d0811f48cf99-EUS"
-}
-
