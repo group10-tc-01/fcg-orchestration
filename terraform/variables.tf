@@ -23,7 +23,7 @@ variable "tags" {
 variable "acr_name" {
   description = "Nome do Azure Container Registry (deve ser globalmente único)"
   type        = string
-  default     = "fiapcr"
+  default     = "fcgacrfiap2026"
 }
 
 variable "acr_sku" {
