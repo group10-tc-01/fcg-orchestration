@@ -61,19 +61,19 @@ variable "app_service_plan_sku" {
 variable "webapp_catalog_name" {
   description = "Nome do Web App para o microsserviço fcg-catalog"
   type        = string
-  default     = "fcg-catalog"
+  default     = "fcg-catalog-fiap2026"
 }
 
 variable "webapp_payments_name" {
   description = "Nome do Web App para o microsserviço fcg-payments"
   type        = string
-  default     = "fcg-payments"
+  default     = "fcg-payments-fiap2026"
 }
 
 variable "webapp_users_name" {
   description = "Nome do Web App para o microsserviço fcg-users"
   type        = string
-  default     = "fcg-users"
+  default     = "fcg-users-fiap2026"
 }
 
 variable "docker_image_tag" {
@@ -140,7 +140,7 @@ variable "key_vault_name" {
 variable "apim_name" {
   description = "Nome do Azure API Management (deve ser globalmente único)"
   type        = string
-  default     = "fcg-apim-fiap-2026"
+  default     = "fcg-apim-fiap2026"
 }
 
 variable "apim_publisher_name" {
@@ -175,7 +175,7 @@ variable "eventhub_namespace_name" {
 variable "eventhub_location" {
   description = "Localização do Event Hub Namespace"
   type        = string
-  default     = "brazilsouth"
+  default     = "eastus"
 }
 
 variable "eventhub_namespace_sku" {
