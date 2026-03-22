@@ -96,6 +96,74 @@ output "webapp_users_default_hostname" {
   value       = module.webapp.webapp_users_default_hostname
 }
 
+# Azure Functions
+output "functions_storage_account_id" {
+  description = "ID da Storage Account das Azure Functions"
+  value       = module.functions.storage_account_id
+}
+
+output "functions_storage_account_name" {
+  description = "Nome da Storage Account das Azure Functions"
+  value       = module.functions.storage_account_name
+}
+
+output "functions_application_insights_id" {
+  description = "ID do Application Insights das Azure Functions"
+  value       = module.functions.application_insights_id
+}
+
+output "functions_application_insights_name" {
+  description = "Nome do Application Insights das Azure Functions"
+  value       = module.functions.application_insights_name
+}
+
+output "functions_service_plan_id" {
+  description = "ID do App Service Plan das Azure Functions"
+  value       = module.functions.service_plan_id
+}
+
+output "functions_service_plan_name" {
+  description = "Nome do App Service Plan das Azure Functions"
+  value       = module.functions.service_plan_name
+}
+
+output "function_app_id" {
+  description = "ID da Azure Function App"
+  value       = module.functions.function_app_id
+}
+
+output "function_app_name" {
+  description = "Nome da Azure Function App"
+  value       = module.functions.function_app_name
+}
+
+output "function_app_default_hostname" {
+  description = "Hostname padrão da Azure Function App"
+  value       = module.functions.function_app_default_hostname
+}
+
+output "function_app_url" {
+  description = "URL da Azure Function App"
+  value       = module.functions.function_app_url
+}
+
+# Azure Communication Service
+output "communication_service_id" {
+  description = "ID do Azure Communication Service"
+  value       = module.communication_service.id
+}
+
+output "communication_service_name" {
+  description = "Nome do Azure Communication Service"
+  value       = module.communication_service.name
+}
+
+output "communication_service_primary_connection_string" {
+  description = "Primary connection string do Azure Communication Service"
+  value       = module.communication_service.primary_connection_string
+  sensitive   = true
+}
+
 # SQL Server
 output "sql_server_id" {
   description = "ID do Azure SQL Server"

@@ -92,6 +92,37 @@ module "webapp" {
   tags = var.tags
 }
 
+module "functions" {
+  source = "./modules/functions"
+
+  resource_group_name = module.resource_group.name
+  location            = module.resource_group.location
+
+  storage_account_name            = var.functions_storage_account_name
+  application_insights_name       = var.functions_application_insights_name
+  service_plan_name               = var.functions_service_plan_name
+  service_plan_sku                = var.functions_service_plan_sku
+  function_app_name               = var.function_app_name
+  eventhub_connection_string      = module.eventhub.namespace_connection_string
+  eventhub_consumer_group         = var.functions_eventhub_consumer_group
+  eventhub_user_created_name      = var.eventhub_user_created_name
+  eventhub_payment_processed_name = var.eventhub_payment_processed_name
+  email_connection_string         = module.communication_service.primary_connection_string
+  email_sender_address            = var.communication_service_sender_address
+
+  tags = var.tags
+}
+
+module "communication_service" {
+  source = "./modules/communication_service"
+
+  communication_service_name = var.communication_service_name
+  resource_group_name        = module.resource_group.name
+  data_location              = var.communication_service_data_location
+
+  tags = var.tags
+}
+
 module "apim" {
   source = "./modules/apim"
 

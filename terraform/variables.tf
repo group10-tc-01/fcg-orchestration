@@ -82,6 +82,60 @@ variable "docker_image_tag" {
   default     = "latest"
 }
 
+variable "functions_storage_account_name" {
+  description = "Nome da Storage Account da Azure Function App (deve ser globalmente unico)"
+  type        = string
+  default     = "fcgfuncstfiap2026"
+}
+
+variable "functions_application_insights_name" {
+  description = "Nome do Application Insights das Azure Functions"
+  type        = string
+  default     = "appi-fcg-functions-fiap2026"
+}
+
+variable "functions_service_plan_name" {
+  description = "Nome do App Service Plan das Azure Functions"
+  type        = string
+  default     = "asp-fcg-functions"
+}
+
+variable "functions_service_plan_sku" {
+  description = "SKU do App Service Plan das Azure Functions"
+  type        = string
+  default     = "B1"
+}
+
+variable "function_app_name" {
+  description = "Nome da Azure Function App (deve ser globalmente unico)"
+  type        = string
+  default     = "fcg-functions-fiap2026"
+}
+
+variable "functions_eventhub_consumer_group" {
+  description = "Consumer group usado pelas Azure Functions"
+  type        = string
+  default     = "$Default"
+}
+
+variable "communication_service_name" {
+  description = "Nome do Azure Communication Service (deve ser globalmente unico)"
+  type        = string
+  default     = "fcg-communication-fiap2026"
+}
+
+variable "communication_service_data_location" {
+  description = "Data location do Azure Communication Service"
+  type        = string
+  default     = "United States"
+}
+
+variable "communication_service_sender_address" {
+  description = "Endereco remetente validado no Azure Communication Services"
+  type        = string
+  default     = ""
+}
+
 # SQL Server variables
 variable "sql_location" {
   description = "Localização específica para o SQL Server (pode ser diferente do Resource Group)"
