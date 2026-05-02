@@ -17,6 +17,21 @@ module "acr" {
   tags                = var.tags
 }
 
+module "aks" {
+  source = "./modules/aks"
+
+  aks_cluster_name    = var.aks_cluster_name
+  aks_dns_prefix      = var.aks_dns_prefix
+  aks_node_count      = var.aks_node_count
+  aks_node_vm_size    = var.aks_node_vm_size
+  aks_os_disk_size_gb = var.aks_os_disk_size_gb
+  aks_tier            = var.aks_tier
+  resource_group_name = module.resource_group.name
+  location            = module.resource_group.location
+  acr_id              = module.acr.id
+  tags                = var.tags
+}
+
 module "database" {
   source = "./modules/database"
 
@@ -55,7 +70,10 @@ module "keyvault" {
   location            = module.resource_group.location
   tags                = var.tags
 
-  webapp_principal_ids = module.webapp.webapp_principal_ids
+  runtime_principal_ids = {
+    aks_key_vault_provider = module.aks.key_vault_secrets_provider_object_id
+    function_app           = module.functions.function_app_principal_id
+  }
 
   sql_server_fqdn            = module.database.server_fqdn
   sql_admin_username         = var.sql_admin_username
@@ -63,33 +81,13 @@ module "keyvault" {
   sql_database_catalog_name  = module.database.database_catalog_name
   sql_database_users_name    = module.database.database_users_name
   sql_database_payments_name = module.database.database_payments_name
-}
 
-module "webapp" {
-  source = "./modules/webapp"
-
-  resource_group_name   = module.resource_group.name
-  location              = module.resource_group.location
-  app_service_plan_name = var.app_service_plan_name
-  app_service_plan_sku  = var.app_service_plan_sku
-  webapp_catalog_name   = var.webapp_catalog_name
-  webapp_payments_name  = var.webapp_payments_name
-  webapp_users_name     = var.webapp_users_name
-  docker_image_tag      = var.docker_image_tag
-
-  acr_login_server   = module.acr.login_server
-  acr_admin_username = module.acr.admin_username
-  acr_admin_password = module.acr.admin_password
-
-  kv_secret_conn_catalog_uri  = module.keyvault.secret_conn_catalog_uri
-  kv_secret_conn_users_uri    = module.keyvault.secret_conn_users_uri
-  kv_secret_conn_payments_uri = module.keyvault.secret_conn_payments_uri
-
-  eventhub_kafka_endpoint    = module.eventhub.kafka_endpoint
-  eventhub_connection_string = module.eventhub.namespace_connection_string
-  eventhub_user_created_name = module.eventhub.eventhub_user_created_name
-
-  tags = var.tags
+  eventhub_connection_string      = module.eventhub.namespace_connection_string
+  communication_connection_string = module.communication_service.primary_connection_string
+  jwt_secret_key                  = var.jwt_secret_key
+  redis_connection_string         = var.redis_connection_string
+  mongodb_connection_string       = var.mongodb_connection_string
+  elasticsearch_uri               = var.elasticsearch_uri
 }
 
 module "functions" {
@@ -132,5 +130,6 @@ module "apim" {
   apim_publisher_name  = var.apim_publisher_name
   apim_publisher_email = var.apim_publisher_email
   apim_sku_name        = var.apim_sku_name
+  backend_base_url     = var.apim_backend_base_url
   tags                 = var.tags
 }

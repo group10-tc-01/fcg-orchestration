@@ -19,9 +19,9 @@ variable "tags" {
   default     = {}
 }
 
-# Web Apps Managed Identity principal IDs para acesso ao Key Vault
-variable "webapp_principal_ids" {
-  description = "Mapa de nome -> principal_id das Managed Identities dos Web Apps"
+# Managed Identity principal IDs para acesso ao Key Vault
+variable "runtime_principal_ids" {
+  description = "Mapa de nome -> principal_id das identidades de runtime que podem ler secrets"
   type        = map(string)
   default     = {}
 }
@@ -55,5 +55,38 @@ variable "sql_database_users_name" {
 
 variable "sql_database_payments_name" {
   description = "Nome do database fcg_payments"
+  type        = string
+}
+
+variable "eventhub_connection_string" {
+  description = "Connection string do Event Hub Namespace"
+  type        = string
+  sensitive   = true
+}
+
+variable "communication_connection_string" {
+  description = "Connection string do Azure Communication Services"
+  type        = string
+  sensitive   = true
+}
+
+variable "jwt_secret_key" {
+  description = "Chave JWT de runtime"
+  type        = string
+  sensitive   = true
+}
+
+variable "redis_connection_string" {
+  description = "Connection string do Redis"
+  type        = string
+}
+
+variable "mongodb_connection_string" {
+  description = "Connection string do MongoDB"
+  type        = string
+}
+
+variable "elasticsearch_uri" {
+  description = "URI do Elasticsearch"
   type        = string
 }

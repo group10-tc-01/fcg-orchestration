@@ -1,39 +1,36 @@
 # terraform.tfvars.example
-# 
-# Copie este arquivo para terraform.tfvars e preencha com seus valores
-# NUNCA commite terraform.tfvars no Git (já está no .gitignore)
+#
+# Copie este arquivo para terraform.tfvars e preencha com seus valores.
+# NUNCA commite terraform.tfvars no Git.
 
 # ============================================================================
 # Resource Group
 # ============================================================================
-# resource_group_name = "fiap-fase-02"
+# resource_group_name = "fiap-fase-04"
 # location            = "eastus"
 
 # tags = {
 #   environment = "dev"
-#   project     = "fiap-fase-02"
+#   project     = "fiap-fase-04"
 #   managed_by  = "terraform"
 # }
 
 # ============================================================================
-# Azure Container Registry
+# Azure Container Registry - menor custo viavel
 # ============================================================================
-# acr_name          = "fiapcr"
-# acr_sku           = "Standard"
-# acr_admin_enabled = true
+# acr_name          = "fcgacrfiap2026"
+# acr_sku           = "Basic"
+# acr_admin_enabled = false
 
 # ============================================================================
-# App Service Plan
+# AKS - Free tier + 1 no barato para demo
 # ============================================================================
-# app_service_plan_name = "asp-fcg-microservices"
-# app_service_plan_sku  = "B1"
-
-# ============================================================================
-# Web Apps
-# ============================================================================
-# webapp_catalog_name  = "fcg-catalog"
-# webapp_payments_name = "fcg-payments"
-# webapp_users_name    = "fcg-users"
+# aks_cluster_name    = "fcg-aks-fiap2026"
+# aks_dns_prefix      = "fcg-aks-fiap2026"
+# aks_tier            = "Free"
+# aks_node_count      = 1
+# aks_node_vm_size    = "Standard_B2ms"
+# aks_os_disk_size_gb = 64
 
 # ============================================================================
 # Docker
@@ -41,32 +38,41 @@
 # docker_image_tag = "latest"
 
 # ============================================================================
-# SQL Server (OBRIGATÓRIO - defina valores abaixo)
+# SQL Server
 # ============================================================================
-# Região onde o SQL Server será criado (pode ser diferente dos Web Apps)
 # sql_location = "brazilsouth"
-
-# Nome do SQL Server (deve ser globalmente único na Azure)
 # sql_server_name = "fcg-sql-fiap-2026"
-
-# Versão do SQL Server (12.0 = SQL Server 2014)
 # sql_server_version = "12.0"
-
-# Credenciais do administrador do SQL Server
 # sql_admin_username = "sqladmin"
-sql_admin_password = "DEFINA_SUA_SENHA_AQUI"  # OBRIGATÓRIO - Mínimo 8 caracteres com complexidade
+sql_admin_password = "DEFINA_SUA_SENHA_AQUI"
 
-# SKU dos databases (Basic, S0, S1, S2, S3, P1, P2, P4)
+# SKU dos databases: manter Basic para menor custo.
 # sql_database_sku = "Basic"
+
+# ============================================================================
+# Runtime secrets
+# ============================================================================
+jwt_secret_key = "DEFINA_UMA_CHAVE_JWT_FORTE_AQUI"
+
+# Redis, MongoDB e Elasticsearch rodam dentro do AKS.
+# redis_connection_string = "redis-service.fcg-system.svc.cluster.local:6379"
+# mongodb_connection_string = "mongodb://mongodb-service.fcg-system.svc.cluster.local:27017"
+# elasticsearch_uri = "http://elasticsearch-service.fcg-system.svc.cluster.local:9200"
+
+# ============================================================================
+# API Management
+# ============================================================================
+# apim_sku_name = "Developer_1"
+# apim_backend_base_url = "https://SEU_INGRESS_PUBLICO"
+
+# ============================================================================
+# Azure Functions
+# ============================================================================
+# functions_service_plan_sku = "Y1"
 
 # ============================================================================
 # Firewall do SQL Server - IPs Permitidos
 # ============================================================================
-# Adicione os IPs que devem ter acesso ao SQL Server
-# Formato: "nome_da_regra" = "endereço_ip"
-# 
 # sql_allowed_ips = {
-#   "Escritorio"   = "203.0.113.10"
-#   "Casa"         = "198.51.100.42"
+#   "Casa" = "198.51.100.42"
 # }
-

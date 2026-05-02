@@ -10,8 +10,39 @@ output "resource_group_name" {
 }
 
 output "resource_group_location" {
-  description = "Localização do Resource Group"
+  description = "Localizacao do Resource Group"
   value       = module.resource_group.location
+}
+
+# AKS
+output "aks_id" {
+  description = "ID do cluster AKS"
+  value       = module.aks.aks_id
+}
+
+output "aks_name" {
+  description = "Nome do cluster AKS"
+  value       = module.aks.aks_name
+}
+
+output "aks_fqdn" {
+  description = "FQDN do cluster AKS"
+  value       = module.aks.aks_fqdn
+}
+
+output "aks_kubelet_identity_object_id" {
+  description = "Object ID da kubelet identity do AKS"
+  value       = module.aks.kubelet_identity_object_id
+}
+
+output "aks_key_vault_secrets_provider_object_id" {
+  description = "Object ID da identidade do Key Vault Secrets Provider"
+  value       = module.aks.key_vault_secrets_provider_object_id
+}
+
+output "aks_key_vault_secrets_provider_client_id" {
+  description = "Client ID da identidade do Key Vault Secrets Provider"
+  value       = module.aks.key_vault_secrets_provider_client_id
 }
 
 # ACR
@@ -25,108 +56,7 @@ output "acr_login_server" {
   value       = module.acr.login_server
 }
 
-output "acr_admin_username" {
-  description = "Username admin do ACR"
-  value       = module.acr.admin_username
-  sensitive   = true
-}
-
-output "acr_admin_password" {
-  description = "Password admin do ACR"
-  value       = module.acr.admin_password
-  sensitive   = true
-}
-
-# App Service Plan
-output "app_service_plan_id" {
-  description = "ID do App Service Plan"
-  value       = module.webapp.app_service_plan_id
-}
-
-output "app_service_plan_name" {
-  description = "Nome do App Service Plan"
-  value       = module.webapp.app_service_plan_name
-}
-
-# Web App Catalog
-output "webapp_catalog_id" {
-  description = "ID do Web App fcg-catalog"
-  value       = module.webapp.webapp_catalog_id
-}
-
-output "webapp_catalog_url" {
-  description = "URL do Web App fcg-catalog"
-  value       = module.webapp.webapp_catalog_url
-}
-
-output "webapp_catalog_default_hostname" {
-  description = "Hostname padrão do Web App fcg-catalog"
-  value       = module.webapp.webapp_catalog_default_hostname
-}
-
-# Web App Payments
-output "webapp_payments_id" {
-  description = "ID do Web App fcg-payments"
-  value       = module.webapp.webapp_payments_id
-}
-
-output "webapp_payments_url" {
-  description = "URL do Web App fcg-payments"
-  value       = module.webapp.webapp_payments_url
-}
-
-output "webapp_payments_default_hostname" {
-  description = "Hostname padrão do Web App fcg-payments"
-  value       = module.webapp.webapp_payments_default_hostname
-}
-
-# Web App Users
-output "webapp_users_id" {
-  description = "ID do Web App fcg-users"
-  value       = module.webapp.webapp_users_id
-}
-
-output "webapp_users_url" {
-  description = "URL do Web App fcg-users"
-  value       = module.webapp.webapp_users_url
-}
-
-output "webapp_users_default_hostname" {
-  description = "Hostname padrão do Web App fcg-users"
-  value       = module.webapp.webapp_users_default_hostname
-}
-
 # Azure Functions
-output "functions_storage_account_id" {
-  description = "ID da Storage Account das Azure Functions"
-  value       = module.functions.storage_account_id
-}
-
-output "functions_storage_account_name" {
-  description = "Nome da Storage Account das Azure Functions"
-  value       = module.functions.storage_account_name
-}
-
-output "functions_application_insights_id" {
-  description = "ID do Application Insights das Azure Functions"
-  value       = module.functions.application_insights_id
-}
-
-output "functions_application_insights_name" {
-  description = "Nome do Application Insights das Azure Functions"
-  value       = module.functions.application_insights_name
-}
-
-output "functions_service_plan_id" {
-  description = "ID do App Service Plan das Azure Functions"
-  value       = module.functions.service_plan_id
-}
-
-output "functions_service_plan_name" {
-  description = "Nome do App Service Plan das Azure Functions"
-  value       = module.functions.service_plan_name
-}
-
 output "function_app_id" {
   description = "ID da Azure Function App"
   value       = module.functions.function_app_id
@@ -135,11 +65,6 @@ output "function_app_id" {
 output "function_app_name" {
   description = "Nome da Azure Function App"
   value       = module.functions.function_app_name
-}
-
-output "function_app_default_hostname" {
-  description = "Hostname padrão da Azure Function App"
-  value       = module.functions.function_app_default_hostname
 }
 
 output "function_app_url" {
@@ -158,12 +83,6 @@ output "communication_service_name" {
   value       = module.communication_service.name
 }
 
-output "communication_service_primary_connection_string" {
-  description = "Primary connection string do Azure Communication Service"
-  value       = module.communication_service.primary_connection_string
-  sensitive   = true
-}
-
 # SQL Server
 output "sql_server_id" {
   description = "ID do Azure SQL Server"
@@ -175,40 +94,13 @@ output "sql_server_fqdn" {
   value       = module.database.server_fqdn
 }
 
-output "sql_server_name" {
-  description = "Nome do Azure SQL Server"
-  value       = module.database.server_name
-}
-
-# SQL Databases
-output "sql_database_catalog_id" {
-  description = "ID do database fcg_catalog"
-  value       = module.database.database_catalog_id
-}
-
-output "sql_database_catalog_name" {
-  description = "Nome do database fcg_catalog"
-  value       = module.database.database_catalog_name
-}
-
-output "sql_database_users_id" {
-  description = "ID do database fcg_users"
-  value       = module.database.database_users_id
-}
-
-output "sql_database_users_name" {
-  description = "Nome do database fcg_users"
-  value       = module.database.database_users_name
-}
-
-output "sql_database_payments_id" {
-  description = "ID do database fcg_payments"
-  value       = module.database.database_payments_id
-}
-
-output "sql_database_payments_name" {
-  description = "Nome do database fcg_payments"
-  value       = module.database.database_payments_name
+output "sql_database_names" {
+  description = "Nomes dos databases SQL"
+  value = {
+    catalog  = module.database.database_catalog_name
+    users    = module.database.database_users_name
+    payments = module.database.database_payments_name
+  }
 }
 
 # Key Vault
@@ -243,14 +135,9 @@ output "apim_gateway_url" {
   value       = module.apim.gateway_url
 }
 
-output "apim_portal_url" {
-  description = "URL do portal do desenvolvedor do API Management"
-  value       = module.apim.portal_url
-}
-
-output "apim_management_url" {
-  description = "URL do portal de gerenciamento do API Management"
-  value       = module.apim.management_url
+output "apim_api_paths" {
+  description = "Paths publicados no API Management"
+  value       = module.apim.api_paths
 }
 
 # Event Hub
@@ -264,28 +151,7 @@ output "eventhub_namespace_name" {
   value       = module.eventhub.namespace_name
 }
 
-output "eventhub_namespace_connection_string" {
-  description = "Connection string primária do Event Hub Namespace"
-  value       = module.eventhub.namespace_connection_string
-  sensitive   = true
-}
-
 output "eventhub_namespace_kafka_endpoint" {
   description = "Kafka endpoint do Event Hub Namespace"
   value       = module.eventhub.kafka_endpoint
-}
-
-output "eventhub_user_created_id" {
-  description = "ID do Event Hub user-created"
-  value       = module.eventhub.eventhub_user_created_id
-}
-
-output "eventhub_payment_processed_id" {
-  description = "ID do Event Hub payment-processed"
-  value       = module.eventhub.eventhub_payment_processed_id
-}
-
-output "eventhub_order_placed_id" {
-  description = "ID do Event Hub order-placed"
-  value       = module.eventhub.eventhub_order_placed_id
 }

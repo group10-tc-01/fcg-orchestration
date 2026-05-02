@@ -33,6 +33,11 @@ variable "apim_sku_name" {
   }
 }
 
+variable "backend_base_url" {
+  description = "URL base publica do Ingress/Load Balancer do AKS."
+  type        = string
+}
+
 variable "tags" {
   description = "Tags do recurso"
   type        = map(string)

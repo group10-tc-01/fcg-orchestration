@@ -16,7 +16,7 @@ variable "location" {
 variable "acr_sku" {
   description = "SKU do Azure Container Registry"
   type        = string
-  default     = "Standard"
+  default     = "Basic"
   validation {
     condition     = contains(["Basic", "Standard", "Premium"], var.acr_sku)
     error_message = "SKU deve ser Basic, Standard ou Premium."
@@ -26,7 +26,7 @@ variable "acr_sku" {
 variable "acr_admin_enabled" {
   description = "Habilitar admin user no ACR"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "tags" {

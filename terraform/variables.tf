@@ -29,7 +29,7 @@ variable "acr_name" {
 variable "acr_sku" {
   description = "SKU do Azure Container Registry"
   type        = string
-  default     = "Standard"
+  default     = "Basic"
   validation {
     condition     = contains(["Basic", "Standard", "Premium"], var.acr_sku)
     error_message = "SKU deve ser Basic, Standard ou Premium."
@@ -39,47 +39,59 @@ variable "acr_sku" {
 variable "acr_admin_enabled" {
   description = "Habilitar admin user no ACR"
   type        = bool
-  default     = true
-}
-
-variable "app_service_plan_name" {
-  description = "Nome do App Service Plan compartilhado"
-  type        = string
-  default     = "asp-fcg-microservices"
-}
-
-variable "app_service_plan_sku" {
-  description = "SKU do App Service Plan"
-  type        = string
-  default     = "B1"
-  validation {
-    condition     = contains(["F1", "D1", "B1", "B2", "B3", "S1", "S2", "S3", "P1v2", "P2v2", "P3v2"], var.app_service_plan_sku)
-    error_message = "SKU deve ser um valor válido de App Service Plan."
-  }
-}
-
-variable "webapp_catalog_name" {
-  description = "Nome do Web App para o microsserviço fcg-catalog"
-  type        = string
-  default     = "fcg-catalog-fiap2026"
-}
-
-variable "webapp_payments_name" {
-  description = "Nome do Web App para o microsserviço fcg-payments"
-  type        = string
-  default     = "fcg-payments-fiap2026"
-}
-
-variable "webapp_users_name" {
-  description = "Nome do Web App para o microsserviço fcg-users"
-  type        = string
-  default     = "fcg-users-fiap2026"
+  default     = false
 }
 
 variable "docker_image_tag" {
   description = "Tag padrão das imagens Docker"
   type        = string
   default     = "latest"
+}
+
+variable "aks_cluster_name" {
+  description = "Nome do cluster AKS"
+  type        = string
+  default     = "fcg-aks-fiap2026"
+}
+
+variable "aks_dns_prefix" {
+  description = "Prefixo DNS do cluster AKS"
+  type        = string
+  default     = "fcg-aks-fiap2026"
+}
+
+variable "aks_node_count" {
+  description = "Quantidade de nós do node pool padrão"
+  type        = number
+  default     = 1
+}
+
+variable "aks_node_vm_size" {
+  description = "Tamanho da VM do node pool padrão"
+  type        = string
+  default     = "Standard_B2ms"
+}
+
+variable "aks_tier" {
+  description = "Tier de gerenciamento do AKS"
+  type        = string
+  default     = "Free"
+  validation {
+    condition     = contains(["Free", "Standard", "Premium"], var.aks_tier)
+    error_message = "aks_tier deve ser Free, Standard ou Premium."
+  }
+}
+
+variable "aks_os_disk_size_gb" {
+  description = "Tamanho do disco OS dos nós AKS em GB"
+  type        = number
+  default     = 64
+}
+
+variable "apim_backend_base_url" {
+  description = "URL pública base do Ingress/Load Balancer do AKS usada como backend do APIM"
+  type        = string
+  default     = "https://example.com"
 }
 
 variable "functions_storage_account_name" {
@@ -103,7 +115,7 @@ variable "functions_service_plan_name" {
 variable "functions_service_plan_sku" {
   description = "SKU do App Service Plan das Azure Functions"
   type        = string
-  default     = "B1"
+  default     = "Y1"
 }
 
 variable "function_app_name" {
@@ -188,6 +200,30 @@ variable "key_vault_name" {
   description = "Nome do Azure Key Vault (deve ser globalmente único)"
   type        = string
   default     = "fcg-kv-fiap-2026"
+}
+
+variable "jwt_secret_key" {
+  description = "Chave JWT injetada via Key Vault"
+  type        = string
+  sensitive   = true
+}
+
+variable "redis_connection_string" {
+  description = "Connection string interna do Redis no AKS"
+  type        = string
+  default     = "redis-service.fcg-system.svc.cluster.local:6379"
+}
+
+variable "mongodb_connection_string" {
+  description = "Connection string interna do MongoDB no AKS"
+  type        = string
+  default     = "mongodb://mongodb-service.fcg-system.svc.cluster.local:27017"
+}
+
+variable "elasticsearch_uri" {
+  description = "URI interna do Elasticsearch no AKS"
+  type        = string
+  default     = "http://elasticsearch-service.fcg-system.svc.cluster.local:9200"
 }
 
 # API Management variables

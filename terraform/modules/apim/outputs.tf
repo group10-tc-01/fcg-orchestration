@@ -22,3 +22,8 @@ output "management_url" {
   description = "URL do portal de gerenciamento do API Management"
   value       = azurerm_api_management.main.management_api_url
 }
+
+output "api_paths" {
+  description = "Paths publicados no API Management"
+  value       = { for key, api in azurerm_api_management_api.apis : key => api.path }
+}
