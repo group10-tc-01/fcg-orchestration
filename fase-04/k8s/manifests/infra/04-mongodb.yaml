@@ -35,6 +35,7 @@ spec:
                 - "db.adminCommand('ping').ok || quit(1)"
             initialDelaySeconds: 10
             periodSeconds: 10
+            timeoutSeconds: 10
             failureThreshold: 12
           resources:
             requests:
