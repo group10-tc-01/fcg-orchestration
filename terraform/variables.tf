@@ -1,7 +1,7 @@
 variable "resource_group_name" {
   description = "Nome do Resource Group"
   type        = string
-  default     = "fiap-fase-03"
+  default     = "fiap-fase-04"
 }
 
 variable "location" {
@@ -15,7 +15,7 @@ variable "tags" {
   type        = map(string)
   default = {
     environment = "dev"
-    project     = "fiap-fase-03"
+    project     = "fiap-fase-04"
     managed_by  = "terraform"
   }
 }
@@ -133,7 +133,7 @@ variable "communication_service_data_location" {
 variable "communication_service_sender_address" {
   description = "Endereco remetente validado no Azure Communication Services"
   type        = string
-  default     = ""
+  default     = "DoNotReply@460e8bfe-e7e2-48f5-9393-a818043d2300.azurecomm.net"
 }
 
 # SQL Server variables

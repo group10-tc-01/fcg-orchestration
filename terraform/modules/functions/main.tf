@@ -57,6 +57,7 @@ resource "azurerm_linux_function_app" "main" {
     {
       "APPLICATIONINSIGHTS_CONNECTION_STRING"      = azurerm_application_insights.main.connection_string
       "AzureWebJobsStorage"                        = azurerm_storage_account.main.primary_connection_string
+      "AzureWebJobsFeatureFlags"                   = "EnableWorkerIndexing"
       "EventHubConnection"                         = var.eventhub_connection_string
       "EventHubSettings__ConsumerGroup"            = var.eventhub_consumer_group
       "EventHubSettings__Topics__PaymentProcessed" = var.eventhub_payment_processed_name
