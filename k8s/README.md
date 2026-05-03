@@ -55,7 +55,7 @@ Portas usadas no host:
 ## Subir tudo
 
 ```bash
-cd fcg-orchestration/fase-04/k8s
+cd fcg-orchestration/k8s
 bash up.sh
 ```
 
@@ -77,6 +77,140 @@ FCG_LOCAL_SEQ_PASSWORD='OutraSenha123!' \
 FCG_LOCAL_JWT_SECRET_KEY='uma-chave-local-com-mais-de-32-caracteres' \
 bash up.sh
 ```
+
+## Connection strings e endpoints
+
+Valores padrao criados pelo `up.sh`:
+
+| Item | Valor |
+| --- | --- |
+| SQL password | `FcgLocal123!` |
+| JWT secret | `local-development-jwt-secret-key-for-fcg-fase04-1234567890` |
+| JWT issuer | `FCG-User` |
+| JWT audience | `FCG-Client` |
+
+Se `FCG_LOCAL_SQL_PASSWORD` ou `FCG_LOCAL_JWT_SECRET_KEY` forem usados ao subir o ambiente, use os valores informados nessas variaveis.
+
+### Dentro do Kubernetes
+
+Use estes enderecos entre pods dentro do cluster:
+
+```text
+SQL Server - Users:
+Server=sqlserver-service.fcg-infra.svc.cluster.local;Database=fcg_user;User Id=sa;Password=FcgLocal123!;TrustServerCertificate=True;
+
+SQL Server - Payments:
+Server=sqlserver-service.fcg-infra.svc.cluster.local;Database=fcg_payments;User Id=sa;Password=FcgLocal123!;TrustServerCertificate=True;
+
+SQL Server - Catalog:
+Server=sqlserver-service.fcg-infra.svc.cluster.local,1433;Initial Catalog=fcg_catalog;User Id=sa;Password=FcgLocal123!;TrustServerCertificate=True;
+
+Kafka:
+kafka-service.fcg-infra.svc.cluster.local:29092
+
+MongoDB:
+mongodb://mongodb-service.fcg-infra.svc.cluster.local:27017
+
+Redis:
+redis-service.fcg-infra.svc.cluster.local:6379
+
+Elasticsearch:
+http://elasticsearch-service.fcg-infra.svc.cluster.local:9200
+
+Seq ingestion:
+http://seq-service.fcg-infra.svc.cluster.local:5341
+```
+
+### Fora do Kubernetes
+
+Servicos expostos diretamente pelo Kind:
+
+```text
+Users API:
+http://localhost:5050
+
+Payments API:
+http://localhost:5054
+
+Catalog API:
+http://localhost:5000
+
+Kafka UI:
+http://localhost:8081
+
+Seq UI:
+http://localhost:5342
+
+Seq ingestion:
+http://localhost:5341
+
+RedisInsight:
+http://localhost:5540
+
+Elasticsearch:
+http://localhost:9200
+
+Kibana:
+http://localhost:5601
+```
+
+Para acessar servicos internos a partir da maquina, use `kubectl port-forward`.
+
+SQL Server:
+
+```bash
+kubectl port-forward -n fcg-infra svc/sqlserver-service 1433:1433
+```
+
+```text
+Server=localhost,1433;Database=fcg_user;User Id=sa;Password=FcgLocal123!;TrustServerCertificate=True;
+Server=localhost,1433;Database=fcg_payments;User Id=sa;Password=FcgLocal123!;TrustServerCertificate=True;
+Server=localhost,1433;Database=fcg_catalog;User Id=sa;Password=FcgLocal123!;TrustServerCertificate=True;
+```
+
+MongoDB:
+
+```bash
+kubectl port-forward -n fcg-infra svc/mongodb-service 27017:27017
+```
+
+```text
+mongodb://localhost:27017
+```
+
+Database usado pelo payments:
+
+```text
+Payments
+```
+
+Redis:
+
+```bash
+kubectl port-forward -n fcg-infra svc/redis-service 6379:6379
+```
+
+```text
+localhost:6379
+```
+
+No RedisInsight que roda dentro do cluster, use:
+
+```text
+Host: redis-service.fcg-infra.svc.cluster.local
+Port: 6379
+Username: vazio
+Password: vazio
+TLS: desabilitado
+```
+
+Kafka:
+
+```text
+Use o Kafka UI em http://localhost:8081 para validar topicos localmente.
+```
+
+O Kafka local anuncia o listener interno do cluster, entao acesso direto de fora do Kubernetes exige uma configuracao adicional de listener externo.
 
 ## Derrubar
 
