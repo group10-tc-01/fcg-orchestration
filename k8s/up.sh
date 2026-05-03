@@ -101,6 +101,7 @@ create_secret fcg-payments fcg-payments-local-secret \
 
 create_secret fcg-catalog fcg-catalog-local-secret \
   --from-literal=connection-string="Server=sqlserver-service.fcg-infra.svc.cluster.local,1433;Initial Catalog=fcg_catalog;User Id=sa;Password=$SQL_PASSWORD;Persist Security Info=False;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;" \
+  --from-literal=mongo-connection-string="mongodb://mongodb-service.fcg-infra.svc.cluster.local:27017/fcg_catalog" \
   --from-literal=jwt-secret-key="$JWT_SECRET_KEY"
 
 echo "Applying infrastructure"

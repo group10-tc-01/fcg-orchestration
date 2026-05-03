@@ -16,7 +16,7 @@ Infra em `fcg-infra`:
 
 - SQL Server 2022 com databases `fcg_user`, `fcg_payments` e `fcg_catalog`
 - Kafka em modo KRaft
-- MongoDB com database usado pelo payments
+- MongoDB com databases usados por payments e catalog
 - Redis usado pelo catalog
 - Elasticsearch com indice `games` criado pelo catalog no startup
 - Seq
@@ -110,6 +110,7 @@ kafka-service.fcg-infra.svc.cluster.local:29092
 
 MongoDB:
 mongodb://mongodb-service.fcg-infra.svc.cluster.local:27017
+mongodb://mongodb-service.fcg-infra.svc.cluster.local:27017/fcg_catalog
 
 Redis:
 redis-service.fcg-infra.svc.cluster.local:6379
@@ -178,10 +179,11 @@ kubectl port-forward -n fcg-infra svc/mongodb-service 27017:27017
 mongodb://localhost:27017
 ```
 
-Database usado pelo payments:
+Databases usados localmente:
 
 ```text
 Payments
+fcg_catalog
 ```
 
 Redis:

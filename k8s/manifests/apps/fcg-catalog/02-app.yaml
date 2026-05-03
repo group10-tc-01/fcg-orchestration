@@ -38,6 +38,11 @@ spec:
                 secretKeyRef:
                   name: fcg-catalog-local-secret
                   key: connection-string
+            - name: ConnectionStrings__MongoConnection
+              valueFrom:
+                secretKeyRef:
+                  name: fcg-catalog-local-secret
+                  key: mongo-connection-string
             - name: JwtSettings__SecretKey
               valueFrom:
                 secretKeyRef:
