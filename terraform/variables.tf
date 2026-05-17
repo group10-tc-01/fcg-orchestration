@@ -211,19 +211,19 @@ variable "jwt_secret_key" {
 variable "redis_connection_string" {
   description = "Connection string interna do Redis no AKS"
   type        = string
-  default     = "redis-service.fcg-system.svc.cluster.local:6379"
+  default     = "redis-service.fcg-infra.svc.cluster.local:6379"
 }
 
 variable "mongodb_connection_string" {
   description = "Connection string interna do MongoDB no AKS"
   type        = string
-  default     = "mongodb://mongodb-service.fcg-system.svc.cluster.local:27017"
+  default     = "mongodb://mongodb-service.fcg-infra.svc.cluster.local:27017"
 }
 
 variable "elasticsearch_uri" {
   description = "URI interna do Elasticsearch no AKS"
   type        = string
-  default     = "http://elasticsearch-service.fcg-system.svc.cluster.local:9200"
+  default     = "http://elasticsearch-service.fcg-infra.svc.cluster.local:9200"
 }
 
 # API Management variables
